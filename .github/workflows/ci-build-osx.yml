@@ -8,8 +8,8 @@ jobs:
     runs-on: macos-latest
     strategy:
       matrix:
-        python: [3.10.x]
-        # python: [3.10.x,3.11.x,3.12.x]
+        
+        python: [3.8.x,3.9.x,3.10.x,3.11.x,3.12.x]
     steps:
     - name: Check out code
       uses: actions/checkout@v4
@@ -28,11 +28,15 @@ jobs:
     - name: Make aubio
       run: |
         make
-
+    
     - name: Build wheels for ${{ matrix.python }}
       run: |
         python setup.py bdist_wheel
-
+    - name: Test wheels  for ${{ matrix.python }}
+      run: |
+        pip install dist/*.whl
+        python -c "import aubio; print(aubio.__version__)"
+  
     - name: Upload wheels
       uses: actions/upload-artifact@v2
       with:
