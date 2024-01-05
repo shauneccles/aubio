@@ -22,7 +22,7 @@ jobs:
     - name: Install dependencies
       run: |
         brew install pkg-config gnupg
-        brew install sox ffmpeg libsndfile libvorbis flac lcov
+        brew install sox ffmpeg libsndfile libvorbis flac lcov numpy
         pip install wheel
 
     - name: Make aubio

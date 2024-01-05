@@ -21,7 +21,7 @@ jobs:
     - name: Install dependencies
       run: |
         brew install pkg-config gnupg
-        brew install sox ffmpeg libsndfile libvorbis flac lcov
+        brew install sox ffmpeg libsndfile libvorbis flac lcov numpy
         pip install cibuildwheel
     - name: Make aubio
       run: |
