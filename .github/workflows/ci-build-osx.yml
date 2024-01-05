@@ -27,11 +27,11 @@ jobs:
 
     - name: Build wheels
       env:
-       CIBW_BEFORE_BUILD: pip install numpy pytest
+       CIBW_BEFORE_BUILD: pip install numpy pytest && brew install sox ffmpeg libsndfile libvorbis flac lcov
        CIBW_TEST_COMMAND: make create_test_sounds && pytest {package}/tests
        CIBW_BUILD: cp39-*       
       run: |
-       cibuildwheel --output-dir wheelhouse --include-dirs=~/work/aubio/aubio/build/include --library-dirs=~/work/aubio/aubio/build/lib --libraries=aubio
+       cibuildwheel --output-dir wheelhouse
        
     - name: Upload wheels
       uses: actions/upload-artifact@v2
