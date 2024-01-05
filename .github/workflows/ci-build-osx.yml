@@ -19,7 +19,7 @@ jobs:
       run: |
         brew install pkg-config gnupg
         brew install sox ffmpeg libsndfile libvorbis flac lcov 
-        pip install cibuildwheel
+        pip install wheel numpy pytest
     - name: Make aubio
       run: |
        make
@@ -40,6 +40,12 @@ jobs:
     #    CIBW_BUILD: cp39-*      
     #    CIBW_REPAIR_WHEEL_COMMAND_MACOS: >
     #     DYLD_LIBRARY_PATH=$EXTENDED_DYLD_LIBRARY_PATH delocate-wheel --require-archs {delocate_archs} -w {dest_dir} -v {wheel} 
+
+    - name: Test wheel
+      run: |
+        pip install wheelhouse/*.whl
+        make create_test_sounds
+        pytest aubio/tests
     - name: Upload wheels
       uses: actions/upload-artifact@v2
       with:
