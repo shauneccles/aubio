@@ -29,7 +29,7 @@ jobs:
       run: | 
        libgccpath=$(dirname $(find /usr/local/Cellar/gcc -name libgcc_s.1.1.dylib 2>/dev/null | head -n 1))
        echo "libgccpath=$libgccpath"
-       EXTENDED_DYLD_LIBRARY_PATH="${libgccpath}:${HOME}/${INSTALL_DIR}/lib:$INSTALL_DIR/bin"
+       EXTENDED_DYLD_LIBRARY_PATH="${libgccpath}:${HOME}/${INSTALL_DIR}/lib:$INSTALL_DIR/bin:$HOME/lib:/usr/local/lib:/usr/lib"
     - name: Build wheels
       run: |
        cibuildwheel --output-dir wheelhouse
