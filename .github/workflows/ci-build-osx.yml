@@ -26,9 +26,8 @@ jobs:
        make install
     - name: Create REPAIR_LIBRARY_PATH for delocate
       run: |
-       echo $DYLD_LIBRARY_PATH
-       export REPAIR_LIBRARY_PATH="~/work/aubio/aubio/build/dist/usr/local/lib/:$DYLD_LIBRARY_PATH"
-       echo $REPAIR_LIBRARY_PATH
+       export REPAIR_LIBRARY_PATH="~/work/aubio/aubio/build/dist/usr/local/lib/"
+       export REPAIR_LIBRARY_PATH="$REPAIR_LIBRARY_PATH:$DYLD_LIBRARY_PATH"
     - name: Build wheels
       run: |
        cibuildwheel --output-dir wheelhouse
@@ -37,7 +36,8 @@ jobs:
        CIBW_TEST_COMMAND: make create_test_sounds && pytest {package}/tests
        CIBW_BUILD: cp39-*       
        CIBW_REPAIR_WHEEL_COMMAND_MACOS: >
-        DYLD_LIBRARY_PATH=$REPAIR_LIBRARY_PATH delocate-wheel --require-archs {delocate_archs} -w {dest_dir} -v {wheel} 
+        DYLD_LIBRARY_PATH=$REPAIR_LIBRARY_PATH delocate-listdeps {wheel} &&
+        DYLD_LIBRARY_PATH=$REPAIR_LIBRARY_PATH delocate-wheel --require-archs {delocate_archs} -w {dest_dir} {wheel}
     - name: Upload wheels
       uses: actions/upload-artifact@v2
       with:
