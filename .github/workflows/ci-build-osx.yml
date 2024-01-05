@@ -7,34 +7,33 @@ jobs:
   build:
     runs-on: macos-latest
     strategy:
-      matrix:
-        python: [3.9.x] # Add other versions as needed
     steps:
     - name: Check out code
       uses: actions/checkout@v4
 
-    - name: Set up Python ${{ matrix.python }}
+    - name: Set up Python
       uses: actions/setup-python@v5
       with:
-        python-version: ${{ matrix.python }}
+        python-version: "3.11.x"
 
     - name: Install dependencies
       run: |
         brew install pkg-config gnupg
         brew install sox ffmpeg libsndfile libvorbis flac lcov 
-        pip install cibuildwheel numpy
+        pip install cibuildwheel
+    - name: Make aubio
+      run: |
+       make
+       make install
 
     - name: Build wheels
       env:
-       CIBW_BEFORE_BUILD: "pip install numpy pytest"
+       CIBW_BEFORE_BUILD: pip install numpy pytest
+       CIBW_TEST_COMMAND: make create_test_sounds && pytest {package}/tests
+       CIBW_BUILD: cp39-*       
       run: |
-       cibuildwheel --output-dir wheelhouse
-  
-    - name: Test wheels
-      run: |
-        pip install wheelhouse/*.whl
-        python -c "import aubio; print(aubio.__version__)"
-
+       cibuildwheel --output-dir wheelhouse --include-dirs=~/work/aubio/aubio/build/include --library-dirs=~/work/aubio/aubio/build/lib --libraries=aubio
+       
     - name: Upload wheels
       uses: actions/upload-artifact@v2
       with:
