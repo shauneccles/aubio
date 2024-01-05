@@ -1,4 +1,4 @@
-name: Build aubio wheels for OS X (Apple Silicon)
+name: Build aubio wheels for OS X (Intel)
 
 on: 
   workflow_dispatch:
