@@ -8,8 +8,7 @@ jobs:
     runs-on: macos-latest
     strategy:
       matrix:
-        
-        python: [3.8.x,3.9.x,3.10.x,3.11.x] # 3.12.x
+        python: [3.9.x] # Add other versions as needed
     steps:
     - name: Check out code
       uses: actions/checkout@v4
@@ -23,22 +22,19 @@ jobs:
       run: |
         brew install pkg-config gnupg
         brew install sox ffmpeg libsndfile libvorbis flac lcov 
-        pip install wheel numpy
+        pip install cibuildwheel numpy
 
-    - name: Make aubio
+    - name: Build wheels
       run: |
-        make
-    
-    - name: Build wheels for ${{ matrix.python }}
+        cibuildwheel --output-dir wheelhouse
+
+    - name: Test wheels
       run: |
-        python setup.py bdist_wheel build_ext --include-dirs=~/work/aubio/aubio/build/include --library-dirs=~/work/aubio/aubio/build/lib --libraries=libaubio
-    - name: Test wheels  for ${{ matrix.python }}
-      run: |
-        pip install dist/*.whl
+        pip install wheelhouse/*.whl
         python -c "import aubio; print(aubio.__version__)"
-  
+
     - name: Upload wheels
       uses: actions/upload-artifact@v2
       with:
         name: wheels
-        path: ./dist/*.whl
+        path: ./wheelhouse/*.whl
