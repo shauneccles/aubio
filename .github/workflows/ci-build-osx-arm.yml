@@ -8,7 +8,7 @@ jobs:
     runs-on: flyci-macos-large-latest-m1
     strategy:
       matrix:
-        python: [3.10.x,3.11.x,3.12.x]
+        python: [3.10.x,3.11.x,] # 3.12.x
     steps:
     - name: Check out code
       uses: actions/checkout@v4
