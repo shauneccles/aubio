@@ -25,9 +25,11 @@ jobs:
         pip install cibuildwheel numpy
 
     - name: Build wheels
+      env:
+       CIBW_BEFORE_BUILD: "pip install numpy pytest"
       run: |
-        cibuildwheel --output-dir wheelhouse
-
+       cibuildwheel --output-dir wheelhouse
+  
     - name: Test wheels
       run: |
         pip install wheelhouse/*.whl
